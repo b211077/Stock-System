@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>주식 정보 검색</title>
+</head>
+<body>
+	<br>
+	주식정보 검색
+	<br><hr>
+
+	<script type="text/javascript" src="../scripts/jquery-3.1.1.js"></script>
+	
+	<form action="../StockFrontController" method="post" name="stockReq">
+		<input type="hidden" id="command" value ="stockSearch" name="command" > 
+		<input type="hidden" id="stockName" name="stockName" > 
+	</form>
+	
+	<br>주식&nbsp;&nbsp;&nbsp;<button onclick="submitStock()">검색</button><br><br><hr>
+	
+	<script type="text/javascript">
+	//$("#stockName").val(data);
+
+	function submitStock(){
+		document.stockReq.submit();
+	}
+</script>
+</body>
+</html>
