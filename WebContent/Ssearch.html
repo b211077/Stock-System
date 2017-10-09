@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<title>TOUR for Korea</title>
+
+<!-- Bootstrap core CSS -->
+<link href="css/bootstrap.css" rel="stylesheet">
+
+<!-- Custom fonts for this template -->
+<link
+	href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800"
+	rel="stylesheet" type="text/css">
+<link
+	href="https://fonts.googleapis.com/css?family=Josefin+Slab:100,300,400,600,700,100italic,300italic,400italic,600italic,700italic"
+	rel="stylesheet" type="text/css">
+
+<!-- Custom styles for this template -->
+<link href="css/business-casual.css?ver=d" rel="stylesheet">
+
+<!-- Bootstrap core JavaScript -->
+<script src="js/jquery.js"></script>
+<script src="js/popper.js"></script>
+<script src="js/bootstrap.js"></script>
+
+<script type="text/javascript">
+	var table_state = false;
+	$(document).ready(function() {
+		var table_template = "<tr data-href='_SITE'><td>_RANK</td><td>_NAME</td><td>_AREA</td><td>_ADDRESS</td></tr>";
+		// 만들어 질 경우 옮겨질 사이트
+		var result_url = "";
+		var s = "";
+		var str = "";
+		
+		$.ajax({
+			url : "search.jsp",
+			type : "GET",
+			success : function(data) {
+				data = JSON.parse(data);
+				
+		   		data.forEach(function(item, index) {
+		   			s = table_template;
+		   			result_url = "tourspot.html?id=" + item.id;
+		   			s = s.replace("_SITE", result_url);
+		   			s = s.replace("_RANK", item.rank);
+		   			s = s.replace("_NAME", item.tourspot);
+		   			s = s.replace("_AREA", item.area);
+		   			s = s.replace("_ADDRESS", item.address);
+		   			str += s;
+		   		});
+		   		$("#table_body").empty;					
+		   		$("#table_body").append(str);
+					console.log("SUCCESS");
+					  $(document).ready(function() {
+						    $('#dataTable2').DataTable();
+						  });
+			}
+			
+		});
+		
+		table_state = true;
+	});
+
+	console.log("END");
+
+	if(table_state == true){
+		console.log(table_state);
+		(function(){
+			  $(document).ready(function() {
+				    $('#dataTable2').DataTable();
+				  });
+		})(jQuery);
+	}
+	
+	// tr을 클릭할 경우 하이퍼링크 생성
+		$(document).on("click", "tr", function() {
+			if($(this).data("href") != undefined){
+		        document.location = $(this).data('href');
+//		        console.log($(this).data('href'));
+			}
+	        return false;
+	 });
+
+	</script>
+	<script src="js/jquery.dataTables.js"></script>
+	<script src="js/dataTables.bootstrap4.js"></script>
+
+
+</head>
+
+<body>
+
+
+    <div class="tagline-upper text-center text-heading text-shadow text-white mt-4 d-none d-lg-block"><red>TOUR</red> for Korea</div>
+    <div class="tagline-lower text-center text-expanded text-shadow text-uppercase text-white mb-4 d-none d-lg-block"><red>T</red>rip <red>O</red>n <red>U</red>ser-adapted <red>R</red>ecommendations</div>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-faded py-lg-3">
+		<div class="container">
+        <a class="navbar-brand text-uppercase text-expanded font-weight-bold d-lg-none" href="index.html">Tour For Korea</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse"
+				data-target="#navbarResponsive" aria-controls="navbarResponsive"
+				aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarResponsive">
+				<ul class="navbar-nav mx-auto">
+					<li class="nav-item  px-lg-4"><a
+						class="nav-link text-uppercase text-expanded" href="index.html">Home
+					</a></li>
+					<li class="nav-item active px-lg-4"><a
+						class="nav-link text-uppercase text-expanded" href="search2.html">Search<span class="sr-only">(current)</span></a>
+					</li>
+					
+					<!--<li class="nav-item px-lg-4"><a
+						class="nav-link text-uppercase text-expanded" href="analysis.html">Analysis</a>
+					</li>  -->
+					
+					<li class="nav-item  px-lg-4"><a
+						class="nav-link text-uppercase text-expanded"
+						href="recommend_input2.html">Recommend</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container">
+
+		<div class="bg-faded p-4 my-4">
+			<hr class="divider">
+			<h2 class="text-center text-lg text-uppercase my-0">
+				<strong>Search Service</strong>
+			</h2>
+			<hr class="divider">
+			<p style="text-align: center">Click the tour spot. Then, You can see the information on the tour spot..</p>
+
+			<!-- 여기서 입력 받습니다. -->
+						<div class="table-responsive">
+              <table class="table table-bordered table-hover" width="100%" id="dataTable2" cellspacing="0">
+                <thead>
+                  <tr>
+                    <th width = "15%">Rank #</th>
+                    <th width = "30%">이름</th>
+                    <th width = "30%">매수/매도</th>
+                    <th>예측률</th>
+                  </tr>
+                </thead>
+                <tfoot>
+                  <tr>
+                    <th>Rank #</th>
+                    <th>이름</th>
+                    <th>매수/매도</th>
+                    <th>예측률</th>
+                  </tr>
+                </tfoot>
+                <tbody id = "table_body">
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card-footer small text-muted">
+            Updated yesterday at 11:59 PM
+          </div>
+        </div>
+        <!-- table-responsive -->
+			
+		</div>
+		<!--  Input Fade -->
+	</div>
+	<!-- /.container -->
+
+	<footer class="bg-faded text-center py-5">
+		<div class="container">
+			<p class="m-0">Copyright &copy; Your Website 2017</p>
+		</div>
+	</footer>
+
+
+</body>
+
+</html>
