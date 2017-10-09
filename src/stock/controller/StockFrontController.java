@@ -24,7 +24,7 @@ public class StockFrontController extends HttpServlet {
 		}
 	}
 
-	// 이름에 따른 주식정보 검색
+	// 이름에 따른 주식정보 검색''''''''''''''''''''''''''''''''''''''''''''''''''''''
 	public void getStock(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String url = "showError.jsp";
 		try {
