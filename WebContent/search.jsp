@@ -6,22 +6,18 @@
 <%
 	String json;
 	String data = request.getParameter("id");
-	String type = request.getParameter("type");
+	//String type = request.getParameter("type");
 	
-	StockService sDAO = new StockService();
+	StockDAO sDAO = new StockDAO();
 	
 	if(data == null){
 		ArrayList<StockDTO> search = null;
-		search = sDAO.searchList("0");
+		search = sDAO.getAllStock();
 		json = Converter.convertToJson(search);
-	} else if(data.equals("top10")){
-		ArrayList<StockDTO> search = null;
-		search = sDAO.searchList("1");
-		json = Converter.convertToJson(search);
-	} 	else{
-		StockService search = null;
-		search = sDAO.tourSpotInfo(data);
-		System.out.println(search.getImage_url1());
+	}else{
+		StockDTO search = null;
+		search = sDAO.getStock(data);
+		//System.out.println(search.getImage_url1());
 		json = Converter.convertToJson(search);
 	}
 %>
