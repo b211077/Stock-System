@@ -1,0 +1,1415 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<title>TOUR for Korea</title>
+
+<!-- Bootstrap core CSS -->
+<link href="css/bootstrap.css" rel="stylesheet">
+
+<!-- Custom fonts for this template -->
+<link
+	href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800"
+	rel="stylesheet" type="text/css">
+<link
+	href="https://fonts.googleapis.com/css?fa mily=Josefin+Slab:100,300,400,600,700,100italic,300italic,400italic,600italic,700italic"
+	rel="stylesheet" type="text/css">
+
+<!-- Custom styles for this template -->
+<link href="css/business-casual.css?ver=da" rel="stylesheet">
+<link href="css/sb-admin.css?ver=2" rel="stylesheet">
+
+
+<!-- Bootstrap core JavaScript -->
+<script src="js/jquery.js"></script>
+<script src="js/jquery.easing.js"></script>
+<script src="js/popper.js"></script>
+<script src="js/bootstrap.js"></script>
+<script src="js/Chart.js"></script>
+
+
+<script type="text/javascript"
+	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=d372aa7ece602b7f0fbeace511893429&libraries=services,cluster,drawing"></script>
+
+<style>
+.wrap {
+	position: absolute;
+	left: 0;
+	bottom: 40px;
+	width: 288px;
+	height: 132px;
+	margin-left: -144px;
+	text-align: left;
+	overflow: hidden;
+	font-size: 12px;
+	font-family: 'Malgun Gothic', dotum, '돋움', sans-serif;
+	line-height: 1.5;
+}
+
+.wrap * {
+	padding: 0;
+	margin: 0;
+}
+
+.wrap .info {
+	width: 286px;
+	height: 120px;
+	border-radius: 5px;
+	border-bottom: 2px solid #ccc;
+	border-right: 1px solid #ccc;
+	overflow: hidden;
+	background: #fff;
+}
+
+.wrap .info:nth-child(1) {
+	border: 0;
+	box-shadow: 0px 1px 2px #888;
+}
+
+.info .title {
+	padding: 5px 0 0 10px;
+	height: 30px;
+	background: #eee;
+	border-bottom: 1px solid #ddd;
+	font-size: 18px;
+	font-weight: bold;
+}
+
+.info .close {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	color: #888;
+	width: 17px;
+	height: 17px;
+	background:
+		url('http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/overlay_close.png');
+}
+
+.info .close:hover {
+	cursor: pointer;
+}
+
+.info .body {
+	position: relative;
+	overflow: hidden;
+}
+
+.info .desc {
+	position: relative;
+	margin: 13px 0 0 90px;
+	height: 75px;
+}
+
+.desc .ellipsis {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.desc .jibun {
+	font-size: 11px;
+	color: #888;
+	margin-top: -2px;
+}
+
+.info .img {
+	position: absolute;
+	top: 6px;
+	left: 5px;
+	width: 73px;
+	height: 71px;
+	border: 1px solid #ddd;
+	color: #888;
+	overflow: hidden;
+}
+
+.info:after {
+	content: '';
+	position: absolute;
+	margin-left: -12px;
+	left: 50%;
+	bottom: 0;
+	width: 22px;
+	height: 12px;
+	background:
+		url('http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')
+}
+
+.info .link {
+	color: #5085BB;
+}
+</style>
+
+
+<script type="text/javascript">
+	// param 찾는 함수
+	function getParam(sname) {
+		var params = location.search.substr(location.search.indexOf("?") + 1);
+		var sval = "";
+		params = params.split("&");
+		// split param and value into individual pieces
+		for (var i = 0; i < params.length; i++) {
+			temp = params[i].split("=");
+			if ([ temp[0] ] == sname) {
+				sval = temp[1];
+			}
+		}
+		return sval;
+	}
+
+	var id_;
+	id_ = getParam("id");
+
+	var json_data;
+	var json_5, json_1, json_2, json_3, json_4;
+
+	// Print_Info Method
+	$(document)
+			.ready(
+					function() {
+
+						var table_template = "<tr data-href='_SITE'><td>_NAME</td><td>_AREA</td><td>_ADDRESS</td></tr>";
+						var s = "";
+
+						var id_temp;
+
+						$
+								.ajax({
+									url : "search.jsp",
+									type : "GET",
+									data : {
+										id : id_
+									},
+									success : function(data) {
+										json_data = JSON.parse(data);
+
+										$("#tourspot_title").append(
+												json_data.tourspot);
+										$("#img_1").attr("src",
+												json_data.image_url1);
+										$("#img_2").attr("src",
+												json_data.image_url2);
+										// 여기까지가 장바구니 관광지
+
+										if (json_data.associate_1 != 0) {
+											$
+													.ajax({
+														url : "search.jsp",
+														type : "GET",
+														data : {
+															id : json_data.associate_1
+														},
+														success : function(data) {
+															var json_temp;
+															var str = "";
+															json_temp = JSON
+																	.parse(data);
+															json_1 = json_temp;
+
+															s = table_template;
+															result_url = "tourspot.html?id="
+																	+ json_temp.id;
+															s = s.replace(
+																	"_SITE",
+																	result_url);
+															s = s
+																	.replace(
+																			"_NAME",
+																			json_temp.tourspot);
+															s = s
+																	.replace(
+																			"_AREA",
+																			json_temp.area);
+															s = s
+																	.replace(
+																			"_ADDRESS",
+																			json_temp.address);
+															str += s;
+
+															$("#table_body").empty;
+															$("#table_body")
+																	.append(str);
+														}
+													});
+										}
+
+										if (json_data.associate_2 != 0) {
+											$
+													.ajax({
+														url : "search.jsp",
+														type : "GET",
+														data : {
+															id : json_data.associate_2
+														},
+														success : function(data) {
+															var json_temp;
+															var str = "";
+															json_temp = JSON
+																	.parse(data);
+															json_2 = json_temp;
+
+															s = table_template;
+															result_url = "tourspot.html?id="
+																	+ json_temp.id;
+															s = s.replace(
+																	"_SITE",
+																	result_url);
+															s = s
+																	.replace(
+																			"_NAME",
+																			json_temp.tourspot);
+															s = s
+																	.replace(
+																			"_AREA",
+																			json_temp.area);
+															s = s
+																	.replace(
+																			"_ADDRESS",
+																			json_temp.address);
+															str += s;
+
+															$("#table_body").empty;
+															$("#table_body")
+																	.append(str);
+														}
+													});
+										}
+
+										if (json_data.associate_3 != 0) {
+											$
+													.ajax({
+														url : "search.jsp",
+														type : "GET",
+														data : {
+															id : json_data.associate_3
+														},
+														success : function(data) {
+															var json_temp;
+															var str = "";
+															json_temp = JSON
+																	.parse(data);
+															json_3 = json_temp;
+
+															s = table_template;
+															result_url = "tourspot.html?id="
+																	+ json_temp.id;
+															s = s.replace(
+																	"_SITE",
+																	result_url);
+															s = s
+																	.replace(
+																			"_NAME",
+																			json_temp.tourspot);
+															s = s
+																	.replace(
+																			"_AREA",
+																			json_temp.area);
+															s = s
+																	.replace(
+																			"_ADDRESS",
+																			json_temp.address);
+															str += s;
+
+															$("#table_body")
+																	.append(str);
+														}
+													});
+										}
+
+										if (json_data.associate_4 != 0) {
+											$
+													.ajax({
+														url : "search.jsp",
+														type : "GET",
+														data : {
+															id : json_data.associate_4
+														},
+														success : function(data) {
+															var json_temp;
+															var str = "";
+															json_temp = JSON
+																	.parse(data);
+															json_4 = json_temp;
+
+															s = table_template;
+															result_url = "tourspot.html?id="
+																	+ json_temp.id;
+															s = s.replace(
+																	"_SITE",
+																	result_url);
+															s = s
+																	.replace(
+																			"_NAME",
+																			json_temp.tourspot);
+															s = s
+																	.replace(
+																			"_AREA",
+																			json_temp.area);
+															s = s
+																	.replace(
+																			"_ADDRESS",
+																			json_temp.address);
+															str += s;
+
+															$("#table_body")
+																	.append(str);
+														}
+													});
+										}
+
+										if (json_data.associate_5 != 0) {
+											$
+													.ajax({
+														url : "search.jsp",
+														type : "GET",
+														data : {
+															id : json_data.associate_5
+														},
+														success : function(data) {
+															var json_temp;
+															var str = "";
+															json_temp = JSON
+																	.parse(data);
+															json_5 = json_temp;
+
+															s = table_template;
+															result_url = "tourspot.html?id="
+																	+ json_temp.id;
+															s = s.replace(
+																	"_SITE",
+																	result_url);
+															s = s
+																	.replace(
+																			"_NAME",
+																			json_temp.tourspot);
+															s = s
+																	.replace(
+																			"_AREA",
+																			json_temp.area);
+															s = s
+																	.replace(
+																			"_ADDRESS",
+																			json_temp.address);
+															str += s;
+
+															$("#table_body")
+																	.append(str);
+														
+														}
+													});
+
+											console.log(s);
+										}
+
+										// 이후부터 관광지 통계 정보
+										
+									}
+									
+								});
+
+					});
+	// map
+	
+	$(document).ready( function(){
+		setTimeout(function(){
+			var position1;
+			var position2;
+			var position3;
+			var position4;
+			var position5;
+
+			var bounds = new daum.maps.LatLngBounds();
+			var setOverlayMapTypeId;
+			var setBounds;
+
+			var closeOverlay;
+			var closeOverlay2;
+			var closeOverlay3;
+			var closeOverlay4;
+			var closeOverlay5;
+
+			var currentTypeId;
+
+			var container = document.getElementById("map");
+			var options = {
+
+				//기본setting
+				center : new daum.maps.LatLng(36.450701, 126.870667),
+				level : 14
+			};
+
+			var map = new daum.maps.Map(container, options);
+			var zoomControl = new daum.maps.ZoomControl();
+			// 지도 오른쪽에 줌 컨트롤이 표시되도록 지도에 컨트롤을 추가한다.
+			map.addControl(zoomControl, daum.maps.ControlPosition.RIGHT);
+
+			setBounds = function setBounds() {
+				map.setBounds(bounds);
+			}
+
+			// 1.버튼클릭시 지도선택 함수
+			setOverlayMapTypeId = function setOverlayMapTypeId(maptype) {
+				var changeMaptype;
+				// 이미 등록된 지도 타입 제거
+				if (currentTypeId) {
+					map.removeOverlayMapTypeId(currentTypeId);
+				}
+				if (maptype === 'traffic') {
+					changeMaptype = daum.maps.MapTypeId.TRAFFIC;
+
+				} else if (maptype === 'roadview') {
+					changeMaptype = daum.maps.MapTypeId.ROADVIEW;
+
+				} else if (maptype === 'terrain') {
+					changeMaptype = daum.maps.MapTypeId.TERRAIN;
+
+				} else if (maptype === 'use_district') {
+					changeMaptype = daum.maps.MapTypeId.USE_DISTRICT;
+
+				}
+
+				// 선택한 지도정보 추가
+				map.addOverlayMapTypeId(changeMaptype);
+
+				// 갱신
+				currentTypeId = changeMaptype;
+			}
+
+			//2.지도위에 마커 표시
+
+			//for 다중마커
+			if(json_1 != null){
+			position1 = {
+				title : json_1.tourspot,
+				addr : json_1.address,
+				image : json_1.img_url1,
+				id : json_1.id
+			};
+			}
+			if(json_2 != null){
+			position2 = {
+				title : json_2.tourspot,
+				addr : json_2.address,
+				image : json_2.img_url1,
+				id : json_2.id
+			};
+			}
+			if(json_3 != null){
+			position3 = {
+				title : json_3.tourspot,
+				addr : json_3.address,
+				image : json_3.img_url1,
+				id : json_3.id
+			};
+			}
+			if(json_4 != null){
+			position4 = {
+				title : json_4.tourspot,
+				addr : json_4.address,
+				image : json_4.img_url1,
+				id : json_4.id
+			};
+			}
+			if(json_5 != null){
+			position5 = {
+				title : json_5.tourspot,
+				addr : json_5.address,
+				image : json_5.img_url1,
+				id : json_5.id
+			};
+			}
+
+			var aaa, marker, imageSrc1 = 'img/m1.png', imageSrc2 = 'img/m2.png', imageSrc3 = 'img/m3.png', imageSrc4 = 'img/m4.png', imageSrc5 = 'img/m5.png', imageSize = new daum.maps.Size(
+					34, 39);
+			// imageOption = {offset:new daum.maps.Point(50,50)};
+
+			//첫번쨰!!!
+			var geocoder = new daum.maps.services.Geocoder();
+			geocoder
+					.addressSearch(
+							position1.addr,
+							function(result, status) {
+								console.log(position1.title)
+								if (status === daum.maps.services.Status.OK) {
+									coords = new daum.maps.LatLng(result[0].y,
+											result[0].x);
+
+									var markerImage1 = new daum.maps.MarkerImage(
+											imageSrc1, imageSize);
+
+									marker = new daum.maps.Marker({
+										map : map,
+										position : coords,
+										image : markerImage1,
+										clickable : true
+
+									});
+
+									bounds.extend(coords);
+
+									var content = '<div class="wrap">'
+											+ '    <div class="info">'
+											+ '        <div class="title">'
+											+ position1.title
+											+ '            <div class="close" onclick="closeOverlay()" title="닫기"></div>'
+											+ '        </div>'
+											+ '        <div class="body">'
+											+ '            <div class="img">'
+											+ '                <img src="'+ position1.image+'" width="73" height="70">'
+											+ '           </div>'
+											+ '            <div class="desc">'
+											+ '                <div class="ellipsis">'
+											+ position1.addr + '</div>' +
+											// '                <div class="jibun ellipsis">(우) 63309 (지번) 영평동 2181</div>' + 
+											'                <div><a href="tourspot.html?id='
+											+ position1.id
+											+ '" class="link">상세정보</a></div>'
+											+ '            </div>' + '        </div>'
+											+ '    </div>' + '</div>';
+
+									var overlay = new daum.maps.CustomOverlay({
+										content : content,
+										map : map,
+										position : coords
+
+									});
+
+									overlay.setMap(null);
+
+									closeOverlay = function closeOverlay() {
+										overlay.setMap(null);
+									}
+
+									daum.maps.event.addListener(marker, 'click',
+											function() {
+												overlay.setMap(map);
+
+											});
+
+								}
+
+							});
+
+			//2번쨰
+			//첫번쨰!!!
+			var geocoder2 = new daum.maps.services.Geocoder();
+			geocoder2
+					.addressSearch(
+							position2.addr,
+							function(result, status) {
+								console.log(position2.title)
+								if (status === daum.maps.services.Status.OK) {
+									coords = new daum.maps.LatLng(result[0].y,
+											result[0].x);
+
+									var markerImage2 = new daum.maps.MarkerImage(
+											imageSrc2, imageSize);
+
+									marker = new daum.maps.Marker({
+										map : map,
+										position : coords,
+										image : markerImage2,
+										clickable : true
+
+									});
+
+									bounds.extend(coords);
+
+									var content = '<div class="wrap">'
+											+ '    <div class="info">'
+											+ '        <div class="title">'
+											+ position2.title
+											+ '            <div class="close" onclick="closeOverlay2()" title="닫기"></div>'
+											+ '        </div>'
+											+ '        <div class="body">'
+											+ '            <div class="img">'
+											+ '                <img src="'+ position2.image+'" width="73" height="70">'
+											+ '           </div>'
+											+ '            <div class="desc">'
+											+ '                <div class="ellipsis">'
+											+ position2.addr + '</div>' +
+											// '                <div class="jibun ellipsis">(우) 63309 (지번) 영평동 2181</div>' + 
+											'                <div><a href="tourspot.html?id='
+											+ position2.id
+											+ '" class="link">상세정보</a></div>'
+											+ '            </div>' + '        </div>'
+											+ '    </div>' + '</div>';
+
+									var overlay = new daum.maps.CustomOverlay({
+										content : content,
+										map : map,
+										position : coords
+
+									});
+
+									overlay.setMap(null);
+
+									closeOverlay2 = function closeOverlay2() {
+										overlay.setMap(null);
+									}
+
+									daum.maps.event.addListener(marker, 'click',
+											function() {
+												overlay.setMap(map);
+
+											});
+
+								}
+
+							});
+
+			//3번쨰
+
+			var geocoder3 = new daum.maps.services.Geocoder();
+			geocoder3
+					.addressSearch(
+							position3.addr,
+							function(result, status) {
+								console.log(position3.title)
+								if (status === daum.maps.services.Status.OK) {
+									coords = new daum.maps.LatLng(result[0].y,
+											result[0].x);
+
+									var markerImage3 = new daum.maps.MarkerImage(
+											imageSrc3, imageSize);
+
+									marker = new daum.maps.Marker({
+										map : map,
+										position : coords,
+										image : markerImage3,
+										clickable : true
+
+									});
+
+									bounds.extend(coords);
+
+									var content = '<div class="wrap">'
+											+ '    <div class="info">'
+											+ '        <div class="title">'
+											+ position3.title
+											+ '            <div class="close" onclick="closeOverlay3()" title="닫기"></div>'
+											+ '        </div>'
+											+ '        <div class="body">'
+											+ '            <div class="img">'
+											+ '                <img src="'+ position3.image+'" width="73" height="70">'
+											+ '           </div>'
+											+ '            <div class="desc">'
+											+ '                <div class="ellipsis">'
+											+ position3.addr + '</div>' +
+											// '                <div class="jibun ellipsis">(우) 63309 (지번) 영평동 2181</div>' + 
+											'                <div><a href="tourspot.html?id='
+											+ position3.id
+											+ '" class="link">상세정보</a></div>'
+											+ '            </div>' + '        </div>'
+											+ '    </div>' + '</div>';
+
+									var overlay = new daum.maps.CustomOverlay({
+										content : content,
+										map : map,
+										position : coords
+
+									});
+
+									overlay.setMap(null);
+
+									closeOverlay3 = function closeOverlay3() {
+										overlay.setMap(null);
+									}
+
+									daum.maps.event.addListener(marker, 'click',
+											function() {
+												overlay.setMap(map);
+
+											});
+
+								}
+
+							});
+
+			//4번쨰
+
+			var geocoder4 = new daum.maps.services.Geocoder();
+			geocoder4
+					.addressSearch(
+							position4.addr,
+							function(result, status) {
+								console.log(position4.title)
+								if (status === daum.maps.services.Status.OK) {
+									coords = new daum.maps.LatLng(result[0].y,
+											result[0].x);
+
+									var markerImage4 = new daum.maps.MarkerImage(
+											imageSrc4, imageSize);
+
+									marker = new daum.maps.Marker({
+										map : map,
+										position : coords,
+										image : markerImage4,
+										clickable : true
+
+									});
+
+									bounds.extend(coords);
+
+									var content = '<div class="wrap">'
+											+ '    <div class="info">'
+											+ '        <div class="title">'
+											+ position4.title
+											+ '            <div class="close" onclick="closeOverlay4()" title="닫기"></div>'
+											+ '        </div>'
+											+ '        <div class="body">'
+											+ '            <div class="img">'
+											+ '                <img src="'+ position4.image+'" width="73" height="70">'
+											+ '           </div>'
+											+ '            <div class="desc">'
+											+ '                <div class="ellipsis">'
+											+ position4.addr + '</div>' +
+											// '                <div class="jibun ellipsis">(우) 63309 (지번) 영평동 2181</div>' + 
+											'                <div><a href="tourspot.html?id='
+											+ position4.id
+											+ '" class="link">상세정보</a></div>'
+											+ '            </div>' + '        </div>'
+											+ '    </div>' + '</div>';
+
+									var overlay = new daum.maps.CustomOverlay({
+										content : content,
+										map : map,
+										position : coords
+
+									});
+
+									overlay.setMap(null);
+
+									closeOverlay4 = function closeOverlay4() {
+										overlay.setMap(null);
+									}
+
+									daum.maps.event.addListener(marker, 'click',
+											function() {
+												overlay.setMap(map);
+
+											});
+
+								}
+
+							});
+
+			//5번쨰
+
+			var geocoder5 = new daum.maps.services.Geocoder();
+			geocoder5
+					.addressSearch(
+							position5.addr,
+							function(result, status) {
+								console.log(position5.title)
+								if (status === daum.maps.services.Status.OK) {
+									coords = new daum.maps.LatLng(result[0].y,
+											result[0].x);
+
+									var markerImage5 = new daum.maps.MarkerImage(
+											imageSrc5, imageSize);
+
+									marker = new daum.maps.Marker({
+										map : map,
+										position : coords,
+										image : markerImage5,
+										clickable : true
+
+									});
+
+									bounds.extend(coords);
+
+									var content = '<div class="wrap">'
+											+ '    <div class="info">'
+											+ '        <div class="title">'
+											+ position5.title
+											+ '            <div class="close" onclick="closeOverlay5()" title="닫기"></div>'
+											+ '        </div>'
+											+ '        <div class="body">'
+											+ '            <div class="img">'
+											+ '                <img src="'+ position5.image+'" width="73" height="70">'
+											+ '           </div>'
+											+ '            <div class="desc">'
+											+ '                <div class="ellipsis">'
+											+ position5.addr + '</div>' +
+											// '                <div class="jibun ellipsis">(우) 63309 (지번) 영평동 2181</div>' + 
+											'                <div><a href="tourspot.html?id='
+											+ position5.id
+											+ '" class="link">상세정보</a></div>'
+											+ '            </div>' + '        </div>'
+											+ '    </div>' + '</div>';
+
+									var overlay = new daum.maps.CustomOverlay({
+										content : content,
+										map : map,
+										position : coords
+
+									});
+
+									overlay.setMap(null);
+
+									closeOverlay5 = function closeOverlay5() {
+										overlay.setMap(null);
+									}
+
+									daum.maps.event.addListener(marker, 'click',
+											function() {
+												overlay.setMap(map);
+
+											});
+								}
+
+							});
+
+			//markerset에 marker추가
+			function addMarker(position) {
+				var marker = new daum.maps.Marker({
+					position : position
+				});
+
+				marker.setMap(map);
+				markerset.push(marker);
+
+			}
+			function addwindow(title) {
+				//마커+설명표시
+				var infowindow = new daum.maps.InfoWindow(
+						{
+							content : '<div style="width:150px;text-align:center;padding:6px 0;"> '
+									+ title + ' </div>'
+						});
+				infowindowset.push(infowindow);
+			}
+			//markerset에 잇는 마커 지도에 추가
+			function setMarkers(map) {
+				for (var i = 0; i < markerset.length; i++) {
+					markerset[i].setMap(map);
+					infowindow[i].open(map, marker)
+				}
+			}
+
+		},5000);
+	});
+	
+</script>
+
+</head>
+
+<body id="page-top">
+
+	<div
+		class="tagline-upper text-center text-heading text-shadow text-white mt-4 d-none d-lg-block">
+		<red>TOUR</red>
+		for Korea
+	</div>
+	<div
+		class="tagline-lower text-center text-expanded text-shadow text-uppercase text-white mb-4 d-none d-lg-block">
+		<red>T</red>
+		rip
+		<red>O</red>
+		n
+		<red>U</red>
+		ser-adapted
+		<red>R</red>
+		ecommendations
+	</div>
+
+	<!-- Navigation -->
+	<nav class="navbar navbar-expand-lg navbar-light bg-faded py-lg-3">
+		<div class="container">
+			<a
+				class="navbar-brand text-uppercase text-expanded font-weight-bold d-lg-none"
+				href="index.html">Tour For Korea</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse"
+				data-target="#navbarResponsive" aria-controls="navbarResponsive"
+				aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarResponsive">
+				<ul class="navbar-nav mx-auto">
+					<li class="nav-item  px-lg-4"><a
+						class="nav-link text-uppercase text-expanded" href="index.html">Home
+							<span class="sr-only">(current)</span>
+					</a></li>
+					<li class="nav-item active px-lg-4"><a
+						class="nav-link text-uppercase text-expanded" href="search2.html">Search</a>
+					</li>
+
+					<!--<li class="nav-item px-lg-4"><a
+						class="nav-link text-uppercase text-expanded" href="analysis.html">Analysis</a>
+					</li>  -->
+
+					<li class="nav-item px-lg-4"><a
+						class="nav-link text-uppercase text-expanded"
+						href="recommend_input2.html">Recommend</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container">
+
+		<div class="bg-faded p-4 my-4">
+			<hr class="divider">
+			<h2 class="text-center text-lg text-uppercase my-0"
+				id="tourspot_title"></h2>
+			<hr class="divider">
+
+			<!-- Image Carousel -->
+			<div id="carouselExampleIndicators" class="carousel slide"
+				data-ride="carousel">
+				<ol class="carousel-indicators">
+					<li data-target="#carouselExampleIndicators" data-slide-to="0"
+						class="active"></li>
+					<li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+				</ol>
+				<div class="carousel-inner" role="listbox"
+					style="width: 100%; height: 500px !important;">
+					<div class="carousel-item active">
+						<img class="d-block img-fluid w-100" src="" id="img_1" alt="">
+					</div>
+					<div class="carousel-item">
+						<img class="d-block img-fluid w-100" src="" id="img_2" alt="">
+					</div>
+				</div>
+				<a class="carousel-control-prev" href="#carouselExampleIndicators"
+					role="button" data-slide="prev"> <span
+					class="carousel-control-prev-icon" aria-hidden="true"></span> <span
+					class="sr-only">Previous</span>
+				</a> <a class="carousel-control-next" href="#carouselExampleIndicators"
+					role="button" data-slide="next"> <span
+					class="carousel-control-next-icon" aria-hidden="true"></span> <span
+					class="sr-only">Next</span>
+				</a>
+			</div>
+		</div>
+
+		<!-- 개요 종료 -->
+
+		<!-- 관광지 통계 정보 -->
+		<div class="bg-faded p-4 my-4">
+			<hr class="divider">
+			<h2 class="text-center text-lg text-uppercase my-0">statistical
+				information</h2>
+			<hr class="divider pb-3">
+
+			<div class="row">
+				<div class="col-lg-5">
+					<div class="card mb-3">
+						<div class="card-header">
+							<i class="fa fa-pie-chart"></i> Pie Chart Example
+						</div>
+						<div class="card-body">
+							<canvas id="myPieChart" width="100%" height="100"></canvas>
+						</div>
+						<div class="card-body py-2 small  text-center">
+							<hr class="mt-0 mb-3">
+
+							<!--  Button -->
+
+
+							<div class="btn-group">
+								<button type="button" class="btn btn-primary dropdown-toggle"
+									data-toggle="dropdown" id="button1">
+									Type <span class="caret"></span>
+								</button>
+								<ul class="dropdown-menu" role="menu"
+									style="text-align: center;">
+									<li><a>Gender</a></li>
+									<li><a>Month</a></li>
+									<li><a>Nation</a></li>
+									<li><a>Purpose</a></li>
+									<li><a>With</a></li>
+									<li><a>Job</a></li>
+								</ul>
+							</div>
+
+
+							<!--  Button End -->
+
+
+						</div>
+						<div class="card-footer small text-muted">Updated yesterday
+							at 11:59 PM</div>
+					</div>
+				</div>
+
+				<div class="col-lg-7">
+					<!-- Example Bar Chart Card -->
+					<div class="card mb-3">
+						<div class="card-header">
+							<i class="fa fa-bar-chart"></i> Bar Chart Example
+						</div>
+						<div class="card-body">
+							<div class="row">
+								<div class="col-sm-8 my-auto">
+									<canvas id="myBarChart" width="100" height="100"></canvas>
+								</div>
+								<div class="col-sm-4 text-center my-auto">
+									<div class="h4 mb-0 text-primary" id="sum_text">$34,693</div>
+									<div class="small text-muted">All Visitors</div>
+									<hr>
+									<div class="h4 mb-0 text-warning" id="max_text">$18,474</div>
+									<div class="small text-muted">Maximum 1 month Visitors</div>
+									<hr>
+									<div class="h4 mb-0 text-success" id="avg_text">$16,219</div>
+									<div class="small text-muted">Average Visitors</div>
+								</div>
+							</div>
+						</div>
+						<div class="card-footer small text-muted">Updated yesterday
+							at 11:59 PM</div>
+					</div>
+
+				</div>
+
+
+			</div>
+			<!--  row end -->
+
+		</div>
+		<!--  관광지 통계 정보 종료 -->
+
+
+		<!-- 연관규칙 정보 -->
+
+		<div class="bg-faded p-4 my-4">
+			<hr class="divider">
+			<h2 class="text-center text-lg text-uppercase my-0">
+				Associated <strong>Tour Spot</strong>
+			</h2>
+			<hr class="divider">
+
+			<!--표  -->
+
+			<div class="row  pb-4">
+				<div class="col-md-7">
+					<div class="card mb-3">
+						<div class="card-header">
+							<i class="fa fa-pie-chart"></i> More information
+						</div>
+						<!-- 표 -->
+						<!--  <p style="text-align: center">Click the tour spot. Then, You can see the information on the tour spot..</p>
+			-->
+						<!-- 여기서 입력 받습니다. -->
+						<div class="card-body">
+							<div class="table-responsive">
+
+								<table class="table table-bordered table-hover text-center"
+									width="100%" cellspacing="0">
+									<thead>
+										<tr>
+											<th class="text-center" width="30%">Tourspot</th>
+											<th class="text-center" width="10%">Area</th>
+											<th class="text-center">Address</th>
+										</tr>
+									</thead>
+									<tbody id="table_body">
+									</tbody>
+								</table>
+							</div>
+							<!-- 표끝 -->
+						</div>
+					</div>
+				</div>
+
+
+				<!-- 지도 -->
+				<div class="col-md-5">
+					<!--  추천여행지 map ! -->
+					<div class="card mb-3">
+						<div class="card-header">
+							<i class="fa fa-pie-chart"></i> Map
+						</div>
+						<div class="card-body text-center">
+							<div id="map" style="width: 100%; height: 400px;"></div>
+							<br>
+							<p>
+				<!-- <div class = "btn-group-vertical">
+								<button pb-5 class="btn btn-default btn-light"
+									onclick="setOverlayMapTypeId('traffic')">교통정보 보기</button>
+								<button class="btn btn-default  btn-light"
+									onclick="setOverlayMapTypeId('roadview')">로드뷰 도로정보 보기</button>
+								<button class="btn btn-default  btn-light"
+									onclick="setOverlayMapTypeId('terrain')">지형정보 보기</button>
+								<button class="btn btn-default  btn-light"
+									onclick="setOverlayMapTypeId('use_district')">지적편집도 보기</button>
+								<button onclik ="setBounds()">여행지 범위</button>
+								</div> -->
+							</p>
+
+
+						</div>
+					</div>
+				</div>
+
+
+				<!-- ㅈㄷㄲ -->
+
+			</div>
+
+		</div>
+
+	</div>
+	<!-- /.container -->
+
+	<!-- Scroll to Top Button -->
+	<a class="scroll-to-top rounded" href="#page-top"> <i
+		class="fa fa-angle-up"></i>
+	</a>
+
+	<footer class="bg-faded text-center py-5">
+		<div class="container">
+			<p class="m-0">Copyright &copy; Your Website 2017</p>
+		</div>
+	</footer>
+
+	<script type="text/javascript">
+		// -- Pie Chart Example
+		// 파이 차트 만드는 함수
+
+		var stastic_json;
+
+		$(document)
+				.ready(
+						function() {
+
+							$
+									.ajax({
+										url : "stastic.jsp",
+										type : "GET",
+										data : {
+											id : id_
+										},
+										success : function(data) {
+											stastic_json = JSON.parse(data);
+											firstpieChart();
+											barChart();
+											$(this)
+													.parents('.btn-group')
+													.find('.dropdown-toggle')
+													.html(
+															"Gender"
+																	+ ' <span class="caret"></span>');
+										}
+									});
+
+							$(".dropdown-menu li a")
+									.click(
+											function() {
+												var selText = $(this).text();
+												console.log(selText);
+												$(this)
+														.parents('.btn-group')
+														.find(
+																'.dropdown-toggle')
+														.html(
+																selText
+																		+ ' <span class="caret"></span>');
+												pieChart(selText);
+											});
+						});
+
+		var myPieChart = null;
+		var CSS_COLOR_NAMES = ["#49BEB7", "#FC345C", "#FF4081", "#E040FB", "#7C4DFF", "#536DFE", "#448AFF",
+			"#40C4FF", "#64FFDA", "#2E7D32", "#B2FF59", "#EEFF41", "#FFAB40", "#5D4037", "#1C2A48", "#616161"];
+
+		function firstpieChart() {
+			var data_temp;
+			var labels_temp;
+
+			var ctx = document.getElementById("myPieChart");
+
+			data_temp = stastic_json.gender_c;
+			labels_temp = [ "Man", "Woman" ];
+
+			myPieChart = new Chart(ctx, {
+				type : 'pie',
+				data : {
+					labels : labels_temp,
+					datasets : [ {
+						data : data_temp,
+						backgroundColor : CSS_COLOR_NAMES,
+					} ],
+				},
+			});
+		}
+
+		function pieChart(category) {
+			var data_temp;
+			var color_temp;
+			var labels_temp;
+
+			if (category == "Gender") {
+				data_temp = stastic_json.gender_c;
+				labels_temp = [ "Man", "Woman" ];
+			} else if (category == "Month") {
+				data_temp = stastic_json.month_c;
+				labels_temp = [ "January", "Febuary", "March", "April", "May",
+						"June", "July", "August", "September", "October",
+						"November", "December", ];
+			} else if (category == "Nation") {
+				data_temp = stastic_json.nation_c;
+				labels_temp = [ "Japan", "China", "Hongkong", "Singapore",
+						"Taiwan", "Thailand", "Malaysia", "Australia", "U.S.A",
+						"Canada", "U.K", "Germany", "France", "Russia",
+						"the Mideast", "India" ];
+			} else if (category == "Job") {
+				data_temp = stastic_json.job_c;
+				labels_temp = [ "Civil servant / Soldier",
+						"Businessman / Manager", "Office job / Technical post",
+						"Sales / Service", "Specialized job",
+						"Production employee / Simple labor", "Owner-operator",
+						"Student", "Housewife", "Retiree", "Inoccupation",
+						"the Others" ];
+			} else if (category == "Purpose") {
+				data_temp = stastic_json.purpose_c;
+				labels_temp = [ "Leisure, Amusement & Individual vacation",
+						"Beauty, Health & Therapy", "Religion and pilgrimage",
+						"Shopping", "Visit friends and relatives",
+						"Business or professional activity", "Education" ];
+			} else if (category == "With") {
+				data_temp = stastic_json.with_c;
+				labels_temp = [ "Solo", "Family / Relative", "Friend / Couple",
+						"Colleague", "the Others" ];
+			}
+
+			var ctx = document.getElementById("myPieChart");
+
+			if (myPieChart != null) {
+				myPieChart.destroy();
+			}
+
+			myPieChart = new Chart(ctx, {
+				type : 'pie',
+				data : {
+					labels : labels_temp,
+					datasets : [ {
+						data : data_temp,
+						backgroundColor : CSS_COLOR_NAMES,
+					} ],
+				},
+			});
+
+			/* 		var myPieChart = new Chart(ctx, {
+			 type: 'pie',
+			 data: {
+			 labels: ["Blue", "Red", "Yellow", "Green", "DREAM", "FALSE"],
+			 datasets: [{
+			 data: data_temp,
+			 backgroundColor: ['#007bff', '#dc3545', '#ffc107', '#28a745'],
+			 }],
+			 },
+			 });
+			 */
+
+		}
+
+		// -- Bar Chart Example
+		function barChart() {
+			var data_temp = stastic_json.month_c;
+			var sum = 0;
+			var avg;
+			var max = 0;
+
+			data_temp.forEach(function(item, index) {
+				sum += item;
+				if (max < item)
+					max = item;
+			});
+
+			avg = sum / 12.0;
+
+			$(document).ready(function() {
+				$("#sum_text").text(sum);
+				$("#max_text").text(max);
+				$("#avg_text").text(avg.toFixed(0));
+				console.log(sum);
+			});
+
+			var ctx = document.getElementById("myBarChart");
+			var myLineChart = new Chart(ctx, {
+				type : 'bar',
+				data : {
+					labels : [ "January", "February", "March", "April", "May",
+							"June", "July", "August", "September", "October",
+							"November", "December" ],
+					datasets : [ {
+						label : "Count",
+						backgroundColor : "rgba(2,117,216,1)",
+						borderColor : "rgba(2,117,216,1)",
+						data : data_temp,
+					} ],
+				},
+				options : {
+					scales : {
+						xAxes : [ {
+							time : {
+								unit : 'month'
+							},
+							gridLines : {
+								display : false
+							},
+							ticks : {
+								maxTicksLimit : 6
+							}
+						} ],
+						yAxes : [ {
+							ticks : {
+								min : 0,
+								//								max : auto,
+								maxTicksLimit : 5
+							},
+							gridLines : {
+								display : true
+							}
+						} ],
+					},
+					legend : {
+						display : false
+					}
+				}
+			});
+		}
+	</script>
+
+	<script type="text/javascript">
+		$(document).scroll(function() {
+			var scrollDistance = $(this).scrollTop();
+			if (scrollDistance > 100) {
+				$('.scroll-to-top').fadeIn();
+			} else {
+				$('.scroll-to-top').fadeOut();
+			}
+		});
+
+		// Smooth scrolling using jQuery easing
+		$(document).on('click', 'a.scroll-to-top', function(event) {
+			var $anchor = $(this);
+			$('html, body').stop().animate({
+				scrollTop : ($($anchor.attr('href')).offset().top)
+			}, 1000, 'easeInOutExpo');
+			event.preventDefault();
+		});
+
+		$(document).on("click", "tr", function() {
+			if ($(this).data("href") != undefined) {
+				document.location = $(this).data('href');
+				//		        console.log($(this).data('href'));
+			}
+			return false;
+		});
+	</script>
+
+
+</body>
+
+</html>

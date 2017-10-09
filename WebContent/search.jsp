@@ -8,7 +8,7 @@
 	String data = request.getParameter("id");
 	String type = request.getParameter("type");
 	
-	StockDTO sDAO = new StockDTO();
+	StockService sDAO = new StockService();
 	
 	if(data == null){
 		ArrayList<StockDTO> search = null;
