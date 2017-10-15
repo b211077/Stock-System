@@ -9,7 +9,7 @@
 <meta name="description" content="">
 <meta name="author" content="">
 
-<title>TOUR for Korea</title>
+    <title>Stock Prediction</title>
 
 <!-- Bootstrap core CSS -->
 <link href="css/bootstrap.css" rel="stylesheet">
@@ -33,7 +33,7 @@
 <script type="text/javascript">
 	var table_state = false;
 	$(document).ready(function() {
-		var table_template = "<tr data-href='_SITE'><td>_RANK</td><td>_NAME</td><td>_AREA</td><td>_ADDRESS</td></tr>";
+		var table_template = "<tr data-href='_SITE'><td>_RANK</td><td>_CNAME</td><td>_ACC</td><td>_decision</td></tr>";
 		// 만들어 질 경우 옮겨질 사이트
 		var result_url = "";
 		var s = "";
@@ -47,12 +47,13 @@
 				
 		   		data.forEach(function(item, index) {
 		   			s = table_template;
-		   			result_url = "tourspot.html?id=" + item.id;
+		   			result_url = "result.html?id=" + item.i;
+
 		   			s = s.replace("_SITE", result_url);
-		   			s = s.replace("_RANK", item.rank);
-		   			s = s.replace("_NAME", item.tourspot);
-		   			s = s.replace("_AREA", item.area);
-		   			s = s.replace("_ADDRESS", item.address);
+		   			s = s.replace("_RANK", item.i);
+		   			s = s.replace("_CNAME", item.cname);
+		   			s = s.replace("_ACC", item.acc);
+		   			s = s.replace("_decision", item.decision);
 		   			str += s;
 		   		});
 		   		$("#table_body").empty;					
@@ -98,9 +99,8 @@
 <body>
 
 
-    <div class="tagline-upper text-center text-heading text-shadow text-white mt-4 d-none d-lg-block"><red>TOUR</red> for Korea</div>
-    <div class="tagline-lower text-center text-expanded text-shadow text-uppercase text-white mb-4 d-none d-lg-block"><red>T</red>rip <red>O</red>n <red>U</red>ser-adapted <red>R</red>ecommendations</div>
-
+    <div class="tagline-upper text-center text-heading text-shadow text-white mt-4 d-none d-lg-block"><red>Stock</red> Prediction</div>
+    <div class="tagline-lower text-center text-expanded text-shadow text-uppercase text-white mb-4 d-none d-lg-block"><red>U</red>sing <red>D</red>eep <red>L</red>earning</div>
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light bg-faded py-lg-3">
 		<div class="container">
@@ -148,16 +148,17 @@
                   <tr>
                     <th width = "10%">Rank </th>
                     <th>종목명</th>
-                    <th>매수/매도</th>
                     <th>정확도</th>
+                    <th>매수/매도</th>
                   </tr>
                 </thead>
                 <tfoot>
                   <tr>
                     <th>Rank </th>
                     <th>종목명</th>
-                    <th>매수/매도</th>
                     <th>정확도</th>
+                    <th>매수/매도</th>
+                    
                   </tr>
                 </tfoot>
                 <tbody id = "table_body">

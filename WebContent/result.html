@@ -154,14 +154,17 @@
 	function getParam(sname) {
 		var params = location.search.substr(location.search.indexOf("?") + 1);
 		var sval = "";
-		params = params.split("&");
+		/* params = params.split("&");
 		// split param and value into individual pieces
 		for (var i = 0; i < params.length; i++) {
 			temp = params[i].split("=");
 			if ([ temp[0] ] == sname) {
 				sval = temp[1];
 			}
-		}
+		} */
+		params = params.split("id=");
+		sval = params[1];
+		console.log(sval);
 		return sval;
 	}
 
@@ -176,27 +179,24 @@
 			.ready(
 					function() {
 
-						var table_template = "<tr data-href='_SITE'><td>_NAME</td><td>_AREA</td><td>_ADDRESS</td></tr>";
+						var table_template = "<tr data-href='_SITE'><td>_CNAME</td><td>_ACC</td><td>_decision</td></tr>";
 						var s = "";
 
 						var id_temp;
 
-						$
-								.ajax({
+						$.ajax({
 									url : "search.jsp",
 									type : "GET",
-									data : {
-										id : id_
-									},
+									data : {id : id_},
 									success : function(data) {
 										json_data = JSON.parse(data);
 
-										$("#tourspot_title").append(
-												json_data.tourspot);
+										$("#stock_title").append(
+												json_data.cname);
 										$("#img_1").attr("src",
-												json_data.image_url1);
+												json_data.acc);
 										$("#img_2").attr("src",
-												json_data.image_url2);
+												json_data.decision);
 										// 여기까지가 장바구니 관광지
 
 										if (json_data.associate_1 != 0) {
@@ -283,132 +283,7 @@
 													});
 										}
 
-										if (json_data.associate_3 != 0) {
-											$
-													.ajax({
-														url : "search.jsp",
-														type : "GET",
-														data : {
-															id : json_data.associate_3
-														},
-														success : function(data) {
-															var json_temp;
-															var str = "";
-															json_temp = JSON
-																	.parse(data);
-															json_3 = json_temp;
-
-															s = table_template;
-															result_url = "tourspot.html?id="
-																	+ json_temp.id;
-															s = s.replace(
-																	"_SITE",
-																	result_url);
-															s = s
-																	.replace(
-																			"_NAME",
-																			json_temp.tourspot);
-															s = s
-																	.replace(
-																			"_AREA",
-																			json_temp.area);
-															s = s
-																	.replace(
-																			"_ADDRESS",
-																			json_temp.address);
-															str += s;
-
-															$("#table_body")
-																	.append(str);
-														}
-													});
-										}
-
-										if (json_data.associate_4 != 0) {
-											$
-													.ajax({
-														url : "search.jsp",
-														type : "GET",
-														data : {
-															id : json_data.associate_4
-														},
-														success : function(data) {
-															var json_temp;
-															var str = "";
-															json_temp = JSON
-																	.parse(data);
-															json_4 = json_temp;
-
-															s = table_template;
-															result_url = "tourspot.html?id="
-																	+ json_temp.id;
-															s = s.replace(
-																	"_SITE",
-																	result_url);
-															s = s
-																	.replace(
-																			"_NAME",
-																			json_temp.tourspot);
-															s = s
-																	.replace(
-																			"_AREA",
-																			json_temp.area);
-															s = s
-																	.replace(
-																			"_ADDRESS",
-																			json_temp.address);
-															str += s;
-
-															$("#table_body")
-																	.append(str);
-														}
-													});
-										}
-
-										if (json_data.associate_5 != 0) {
-											$
-													.ajax({
-														url : "search.jsp",
-														type : "GET",
-														data : {
-															id : json_data.associate_5
-														},
-														success : function(data) {
-															var json_temp;
-															var str = "";
-															json_temp = JSON
-																	.parse(data);
-															json_5 = json_temp;
-
-															s = table_template;
-															result_url = "tourspot.html?id="
-																	+ json_temp.id;
-															s = s.replace(
-																	"_SITE",
-																	result_url);
-															s = s
-																	.replace(
-																			"_NAME",
-																			json_temp.tourspot);
-															s = s
-																	.replace(
-																			"_AREA",
-																			json_temp.area);
-															s = s
-																	.replace(
-																			"_ADDRESS",
-																			json_temp.address);
-															str += s;
-
-															$("#table_body")
-																	.append(str);
-														
-														}
-													});
-
-											console.log(s);
-										}
-
+										
 										// 이후부터 관광지 통계 정보
 										
 									}
@@ -416,488 +291,6 @@
 								});
 
 					});
-	// map
-	
-	$(document).ready( function(){
-		setTimeout(function(){
-			var position1;
-			var position2;
-			var position3;
-			var position4;
-			var position5;
-
-			var bounds = new daum.maps.LatLngBounds();
-			var setOverlayMapTypeId;
-			var setBounds;
-
-			var closeOverlay;
-			var closeOverlay2;
-			var closeOverlay3;
-			var closeOverlay4;
-			var closeOverlay5;
-
-			var currentTypeId;
-
-			var container = document.getElementById("map");
-			var options = {
-
-				//기본setting
-				center : new daum.maps.LatLng(36.450701, 126.870667),
-				level : 14
-			};
-
-			var map = new daum.maps.Map(container, options);
-			var zoomControl = new daum.maps.ZoomControl();
-			// 지도 오른쪽에 줌 컨트롤이 표시되도록 지도에 컨트롤을 추가한다.
-			map.addControl(zoomControl, daum.maps.ControlPosition.RIGHT);
-
-			setBounds = function setBounds() {
-				map.setBounds(bounds);
-			}
-
-			// 1.버튼클릭시 지도선택 함수
-			setOverlayMapTypeId = function setOverlayMapTypeId(maptype) {
-				var changeMaptype;
-				// 이미 등록된 지도 타입 제거
-				if (currentTypeId) {
-					map.removeOverlayMapTypeId(currentTypeId);
-				}
-				if (maptype === 'traffic') {
-					changeMaptype = daum.maps.MapTypeId.TRAFFIC;
-
-				} else if (maptype === 'roadview') {
-					changeMaptype = daum.maps.MapTypeId.ROADVIEW;
-
-				} else if (maptype === 'terrain') {
-					changeMaptype = daum.maps.MapTypeId.TERRAIN;
-
-				} else if (maptype === 'use_district') {
-					changeMaptype = daum.maps.MapTypeId.USE_DISTRICT;
-
-				}
-
-				// 선택한 지도정보 추가
-				map.addOverlayMapTypeId(changeMaptype);
-
-				// 갱신
-				currentTypeId = changeMaptype;
-			}
-
-			//2.지도위에 마커 표시
-
-			//for 다중마커
-			if(json_1 != null){
-			position1 = {
-				title : json_1.tourspot,
-				addr : json_1.address,
-				image : json_1.img_url1,
-				id : json_1.id
-			};
-			}
-			if(json_2 != null){
-			position2 = {
-				title : json_2.tourspot,
-				addr : json_2.address,
-				image : json_2.img_url1,
-				id : json_2.id
-			};
-			}
-			if(json_3 != null){
-			position3 = {
-				title : json_3.tourspot,
-				addr : json_3.address,
-				image : json_3.img_url1,
-				id : json_3.id
-			};
-			}
-			if(json_4 != null){
-			position4 = {
-				title : json_4.tourspot,
-				addr : json_4.address,
-				image : json_4.img_url1,
-				id : json_4.id
-			};
-			}
-			if(json_5 != null){
-			position5 = {
-				title : json_5.tourspot,
-				addr : json_5.address,
-				image : json_5.img_url1,
-				id : json_5.id
-			};
-			}
-
-			var aaa, marker, imageSrc1 = 'img/m1.png', imageSrc2 = 'img/m2.png', imageSrc3 = 'img/m3.png', imageSrc4 = 'img/m4.png', imageSrc5 = 'img/m5.png', imageSize = new daum.maps.Size(
-					34, 39);
-			// imageOption = {offset:new daum.maps.Point(50,50)};
-
-			//첫번쨰!!!
-			var geocoder = new daum.maps.services.Geocoder();
-			geocoder
-					.addressSearch(
-							position1.addr,
-							function(result, status) {
-								console.log(position1.title)
-								if (status === daum.maps.services.Status.OK) {
-									coords = new daum.maps.LatLng(result[0].y,
-											result[0].x);
-
-									var markerImage1 = new daum.maps.MarkerImage(
-											imageSrc1, imageSize);
-
-									marker = new daum.maps.Marker({
-										map : map,
-										position : coords,
-										image : markerImage1,
-										clickable : true
-
-									});
-
-									bounds.extend(coords);
-
-									var content = '<div class="wrap">'
-											+ '    <div class="info">'
-											+ '        <div class="title">'
-											+ position1.title
-											+ '            <div class="close" onclick="closeOverlay()" title="닫기"></div>'
-											+ '        </div>'
-											+ '        <div class="body">'
-											+ '            <div class="img">'
-											+ '                <img src="'+ position1.image+'" width="73" height="70">'
-											+ '           </div>'
-											+ '            <div class="desc">'
-											+ '                <div class="ellipsis">'
-											+ position1.addr + '</div>' +
-											// '                <div class="jibun ellipsis">(우) 63309 (지번) 영평동 2181</div>' + 
-											'                <div><a href="tourspot.html?id='
-											+ position1.id
-											+ '" class="link">상세정보</a></div>'
-											+ '            </div>' + '        </div>'
-											+ '    </div>' + '</div>';
-
-									var overlay = new daum.maps.CustomOverlay({
-										content : content,
-										map : map,
-										position : coords
-
-									});
-
-									overlay.setMap(null);
-
-									closeOverlay = function closeOverlay() {
-										overlay.setMap(null);
-									}
-
-									daum.maps.event.addListener(marker, 'click',
-											function() {
-												overlay.setMap(map);
-
-											});
-
-								}
-
-							});
-
-			//2번쨰
-			//첫번쨰!!!
-			var geocoder2 = new daum.maps.services.Geocoder();
-			geocoder2
-					.addressSearch(
-							position2.addr,
-							function(result, status) {
-								console.log(position2.title)
-								if (status === daum.maps.services.Status.OK) {
-									coords = new daum.maps.LatLng(result[0].y,
-											result[0].x);
-
-									var markerImage2 = new daum.maps.MarkerImage(
-											imageSrc2, imageSize);
-
-									marker = new daum.maps.Marker({
-										map : map,
-										position : coords,
-										image : markerImage2,
-										clickable : true
-
-									});
-
-									bounds.extend(coords);
-
-									var content = '<div class="wrap">'
-											+ '    <div class="info">'
-											+ '        <div class="title">'
-											+ position2.title
-											+ '            <div class="close" onclick="closeOverlay2()" title="닫기"></div>'
-											+ '        </div>'
-											+ '        <div class="body">'
-											+ '            <div class="img">'
-											+ '                <img src="'+ position2.image+'" width="73" height="70">'
-											+ '           </div>'
-											+ '            <div class="desc">'
-											+ '                <div class="ellipsis">'
-											+ position2.addr + '</div>' +
-											// '                <div class="jibun ellipsis">(우) 63309 (지번) 영평동 2181</div>' + 
-											'                <div><a href="tourspot.html?id='
-											+ position2.id
-											+ '" class="link">상세정보</a></div>'
-											+ '            </div>' + '        </div>'
-											+ '    </div>' + '</div>';
-
-									var overlay = new daum.maps.CustomOverlay({
-										content : content,
-										map : map,
-										position : coords
-
-									});
-
-									overlay.setMap(null);
-
-									closeOverlay2 = function closeOverlay2() {
-										overlay.setMap(null);
-									}
-
-									daum.maps.event.addListener(marker, 'click',
-											function() {
-												overlay.setMap(map);
-
-											});
-
-								}
-
-							});
-
-			//3번쨰
-
-			var geocoder3 = new daum.maps.services.Geocoder();
-			geocoder3
-					.addressSearch(
-							position3.addr,
-							function(result, status) {
-								console.log(position3.title)
-								if (status === daum.maps.services.Status.OK) {
-									coords = new daum.maps.LatLng(result[0].y,
-											result[0].x);
-
-									var markerImage3 = new daum.maps.MarkerImage(
-											imageSrc3, imageSize);
-
-									marker = new daum.maps.Marker({
-										map : map,
-										position : coords,
-										image : markerImage3,
-										clickable : true
-
-									});
-
-									bounds.extend(coords);
-
-									var content = '<div class="wrap">'
-											+ '    <div class="info">'
-											+ '        <div class="title">'
-											+ position3.title
-											+ '            <div class="close" onclick="closeOverlay3()" title="닫기"></div>'
-											+ '        </div>'
-											+ '        <div class="body">'
-											+ '            <div class="img">'
-											+ '                <img src="'+ position3.image+'" width="73" height="70">'
-											+ '           </div>'
-											+ '            <div class="desc">'
-											+ '                <div class="ellipsis">'
-											+ position3.addr + '</div>' +
-											// '                <div class="jibun ellipsis">(우) 63309 (지번) 영평동 2181</div>' + 
-											'                <div><a href="tourspot.html?id='
-											+ position3.id
-											+ '" class="link">상세정보</a></div>'
-											+ '            </div>' + '        </div>'
-											+ '    </div>' + '</div>';
-
-									var overlay = new daum.maps.CustomOverlay({
-										content : content,
-										map : map,
-										position : coords
-
-									});
-
-									overlay.setMap(null);
-
-									closeOverlay3 = function closeOverlay3() {
-										overlay.setMap(null);
-									}
-
-									daum.maps.event.addListener(marker, 'click',
-											function() {
-												overlay.setMap(map);
-
-											});
-
-								}
-
-							});
-
-			//4번쨰
-
-			var geocoder4 = new daum.maps.services.Geocoder();
-			geocoder4
-					.addressSearch(
-							position4.addr,
-							function(result, status) {
-								console.log(position4.title)
-								if (status === daum.maps.services.Status.OK) {
-									coords = new daum.maps.LatLng(result[0].y,
-											result[0].x);
-
-									var markerImage4 = new daum.maps.MarkerImage(
-											imageSrc4, imageSize);
-
-									marker = new daum.maps.Marker({
-										map : map,
-										position : coords,
-										image : markerImage4,
-										clickable : true
-
-									});
-
-									bounds.extend(coords);
-
-									var content = '<div class="wrap">'
-											+ '    <div class="info">'
-											+ '        <div class="title">'
-											+ position4.title
-											+ '            <div class="close" onclick="closeOverlay4()" title="닫기"></div>'
-											+ '        </div>'
-											+ '        <div class="body">'
-											+ '            <div class="img">'
-											+ '                <img src="'+ position4.image+'" width="73" height="70">'
-											+ '           </div>'
-											+ '            <div class="desc">'
-											+ '                <div class="ellipsis">'
-											+ position4.addr + '</div>' +
-											// '                <div class="jibun ellipsis">(우) 63309 (지번) 영평동 2181</div>' + 
-											'                <div><a href="tourspot.html?id='
-											+ position4.id
-											+ '" class="link">상세정보</a></div>'
-											+ '            </div>' + '        </div>'
-											+ '    </div>' + '</div>';
-
-									var overlay = new daum.maps.CustomOverlay({
-										content : content,
-										map : map,
-										position : coords
-
-									});
-
-									overlay.setMap(null);
-
-									closeOverlay4 = function closeOverlay4() {
-										overlay.setMap(null);
-									}
-
-									daum.maps.event.addListener(marker, 'click',
-											function() {
-												overlay.setMap(map);
-
-											});
-
-								}
-
-							});
-
-			//5번쨰
-
-			var geocoder5 = new daum.maps.services.Geocoder();
-			geocoder5
-					.addressSearch(
-							position5.addr,
-							function(result, status) {
-								console.log(position5.title)
-								if (status === daum.maps.services.Status.OK) {
-									coords = new daum.maps.LatLng(result[0].y,
-											result[0].x);
-
-									var markerImage5 = new daum.maps.MarkerImage(
-											imageSrc5, imageSize);
-
-									marker = new daum.maps.Marker({
-										map : map,
-										position : coords,
-										image : markerImage5,
-										clickable : true
-
-									});
-
-									bounds.extend(coords);
-
-									var content = '<div class="wrap">'
-											+ '    <div class="info">'
-											+ '        <div class="title">'
-											+ position5.title
-											+ '            <div class="close" onclick="closeOverlay5()" title="닫기"></div>'
-											+ '        </div>'
-											+ '        <div class="body">'
-											+ '            <div class="img">'
-											+ '                <img src="'+ position5.image+'" width="73" height="70">'
-											+ '           </div>'
-											+ '            <div class="desc">'
-											+ '                <div class="ellipsis">'
-											+ position5.addr + '</div>' +
-											// '                <div class="jibun ellipsis">(우) 63309 (지번) 영평동 2181</div>' + 
-											'                <div><a href="tourspot.html?id='
-											+ position5.id
-											+ '" class="link">상세정보</a></div>'
-											+ '            </div>' + '        </div>'
-											+ '    </div>' + '</div>';
-
-									var overlay = new daum.maps.CustomOverlay({
-										content : content,
-										map : map,
-										position : coords
-
-									});
-
-									overlay.setMap(null);
-
-									closeOverlay5 = function closeOverlay5() {
-										overlay.setMap(null);
-									}
-
-									daum.maps.event.addListener(marker, 'click',
-											function() {
-												overlay.setMap(map);
-
-											});
-								}
-
-							});
-
-			//markerset에 marker추가
-			function addMarker(position) {
-				var marker = new daum.maps.Marker({
-					position : position
-				});
-
-				marker.setMap(map);
-				markerset.push(marker);
-
-			}
-			function addwindow(title) {
-				//마커+설명표시
-				var infowindow = new daum.maps.InfoWindow(
-						{
-							content : '<div style="width:150px;text-align:center;padding:6px 0;"> '
-									+ title + ' </div>'
-						});
-				infowindowset.push(infowindow);
-			}
-			//markerset에 잇는 마커 지도에 추가
-			function setMarkers(map) {
-				for (var i = 0; i < markerset.length; i++) {
-					markerset[i].setMap(map);
-					infowindow[i].open(map, marker)
-				}
-			}
-
-		},5000);
-	});
 	
 </script>
 
@@ -907,19 +300,17 @@
 
 	<div
 		class="tagline-upper text-center text-heading text-shadow text-white mt-4 d-none d-lg-block">
-		<red>TOUR</red>
-		for Korea
+		<red>Stock</red>
+		Prediction
 	</div>
 	<div
 		class="tagline-lower text-center text-expanded text-shadow text-uppercase text-white mb-4 d-none d-lg-block">
-		<red>T</red>
-		rip
-		<red>O</red>
-		n
-		<red>U</red>
-		ser-adapted
-		<red>R</red>
-		ecommendations
+		<red>u</red>
+		sing
+		<red>d</red>
+		eep
+		<red>l</red>
+		earning
 	</div>
 
 	<!-- Navigation -->
@@ -960,7 +351,7 @@
 		<div class="bg-faded p-4 my-4">
 			<hr class="divider">
 			<h2 class="text-center text-lg text-uppercase my-0"
-				id="tourspot_title"></h2>
+				id="stock_title"></h2>
 			<hr class="divider">
 
 			<!-- Image Carousel -->

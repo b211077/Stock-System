@@ -4,18 +4,26 @@ public class StockDTO {
 	String cname;
 	int acc;
 	String decision;
+	int i;
 	
 	public StockDTO() {
 		super();
 	}
 
-	public StockDTO(String cname, int acc, String decision) {
+	public StockDTO(String cname, int acc, String decision, int i) {
 		super();
 		this.cname = cname;
 		this.acc = acc;
 		this.decision = decision;
+		this.i = i;
 	}
-
+	public int getI(){
+		return i;
+	}
+	
+	public void setI(int i){
+		this.i = i;
+	}
 	public String getCname() {
 		return cname;
 	}
